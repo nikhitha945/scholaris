@@ -1,0 +1,14 @@
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/ScholarisApplication.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/config/DataSeeder.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/config/SecurityConfig.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/controller/AuthController.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/controller/GlobalExceptionHandler.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/dto/ApiError.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/dto/LoginRequest.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/dto/LoginResponse.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/entity/User.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/repository/UserRepository.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/security/JwtAuthenticationFilter.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/security/JwtUtil.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/service/AuthService.java
+/Users/nikhitha/Projects/scholaris/backend/src/main/java/com/scholaris/service/CustomUserDetailsService.java
