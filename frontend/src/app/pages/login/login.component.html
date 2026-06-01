@@ -1,0 +1,98 @@
+<div class="auth-shell">
+  <aside class="brand-panel">
+    <div class="brand-pattern" aria-hidden="true"></div>
+    <div class="brand-content">
+      <div class="brand-mark">
+        <span class="mark-glyph">S</span>
+        <span class="mark-name">Scholaris</span>
+      </div>
+      <h1 class="brand-headline">
+        Where the work of<br /><em>teaching</em> stays organized.
+      </h1>
+      <p class="brand-sub">
+        Enrollment, schedules, grades, and attendance — one calm place for
+        your whole school.
+      </p>
+    </div>
+    <div class="brand-footer">
+      <span>Established 2026</span>
+      <span>·</span>
+      <span>School Management System</span>
+    </div>
+  </aside>
+
+  <main class="form-panel">
+    <div class="form-wrap">
+      <header class="form-head">
+        <h2>Welcome back</h2>
+        <p>Sign in to your school account to continue.</p>
+      </header>
+
+      @if (errorMessage()) {
+        <div class="alert" role="alert">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="field">
+          <label for="username">Username</label>
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            autocomplete="username"
+            placeholder="e.g. admin"
+            [class.invalid]="
+              form.controls.username.touched && form.controls.username.invalid
+            "
+          />
+          @if (form.controls.username.touched && form.controls.username.invalid) {
+            <span class="hint-error">Username is required.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="password-wrap">
+            <input
+              id="password"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              autocomplete="current-password"
+              placeholder="Enter your password"
+              [class.invalid]="
+                form.controls.password.touched && form.controls.password.invalid
+              "
+            />
+            <button
+              type="button"
+              class="toggle"
+              (click)="togglePassword()"
+              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+            >
+              {{ showPassword() ? 'Hide' : 'Show' }}
+            </button>
+          </div>
+          @if (form.controls.password.touched && form.controls.password.invalid) {
+            <span class="hint-error">Password is required.</span>
+          }
+        </div>
+
+        <button type="submit" class="submit" [disabled]="loading()">
+          @if (loading()) {
+            <span class="spinner" aria-hidden="true"></span>
+            Signing in…
+          } @else {
+            Sign in
+          }
+        </button>
+      </form>
+
+      <div class="demo-note">
+        <strong>Demo accounts</strong>
+        <span>admin / admin123 &nbsp;·&nbsp; teacher / teacher123</span>
+      </div>
+    </div>
+  </main>
+</div>

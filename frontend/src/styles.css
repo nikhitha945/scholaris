@@ -1,0 +1,42 @@
+:root {
+  --ink: #16241f;
+  --ink-soft: #2c3f37;
+  --paper: #f6f3ec;
+  --paper-pure: #fffdf8;
+  --accent: #c8893b;
+  --accent-deep: #a86d28;
+  --moss: #3c5a4a;
+  --moss-light: #5e7d6c;
+  --line: #e0d9c9;
+  --danger: #b3402e;
+  --muted: #8a9089;
+
+  --radius: 14px;
+  --shadow-soft: 0 1px 2px rgba(22, 36, 31, 0.04), 0 8px 30px rgba(22, 36, 31, 0.08);
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input {
+  font-family: inherit;
+}
