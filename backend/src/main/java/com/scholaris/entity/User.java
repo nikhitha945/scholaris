@@ -9,11 +9,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import java.time.Instant;
-
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends Auditable {
 
     public enum Role {
         ADMIN,
@@ -43,9 +41,6 @@ public class User {
 
     @Column(nullable = false)
     private boolean enabled = true;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
 
     public User() {
     }
@@ -114,11 +109,4 @@ public class User {
         this.enabled = enabled;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
 }
