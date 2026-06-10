@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,6 +13,10 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
+  private readonly fb = inject(FormBuilder);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+
   readonly loading = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly showPassword = signal(false);
@@ -21,12 +25,6 @@ export class LoginComponent {
     username: ['', [Validators.required]],
     password: ['', [Validators.required]],
   });
-
-  constructor(
-    private fb: FormBuilder,
-    private auth: AuthService,
-    private router: Router
-  ) {}
 
   togglePassword(): void {
     this.showPassword.update((v) => !v);

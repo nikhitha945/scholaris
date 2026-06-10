@@ -1,0 +1,9 @@
+# OS
+.DS_Store
+
+# Angular
+frontend/node_modules/
+frontend/.angular/
+
+# Java / Maven
+backend/target/
