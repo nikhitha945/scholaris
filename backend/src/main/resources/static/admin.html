@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholaris Admin Portal</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
+
+        /* Login */
+        #login-section { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .login-card { background: #fff; padding: 2.5rem; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); width: 360px; }
+        .login-card h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+        .login-card p { color: #666; font-size: 0.875rem; margin-bottom: 1.5rem; }
+        .login-card label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.25rem; color: #444; }
+        .login-card input { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #d0d5dd; border-radius: 6px; font-size: 0.9rem; margin-bottom: 1rem; }
+        .login-card input:focus { outline: none; border-color: #4361ee; box-shadow: 0 0 0 3px rgba(67,97,238,0.15); }
+        .login-card button { width: 100%; padding: 0.7rem; background: #4361ee; color: #fff; border: none; border-radius: 6px; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+        .login-card button:hover { background: #3a56d4; }
+        #login-error { color: #e63946; font-size: 0.8rem; margin-bottom: 0.75rem; display: none; }
+
+        /* Console */
+        #console-section { display: none; max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+        .console-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+        .console-header h1 { font-size: 1.35rem; }
+        .console-header .user-info { display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; color: #555; }
+        #btn-logout { background: none; border: 1px solid #d0d5dd; padding: 0.4rem 0.85rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        #btn-logout:hover { background: #f8f9fa; }
+
+        .query-box { background: #fff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 1.25rem; margin-bottom: 1.25rem; }
+        .query-box textarea { width: 100%; height: 120px; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.875rem; border: 1px solid #d0d5dd; border-radius: 6px; padding: 0.75rem; resize: vertical; }
+        .query-box textarea:focus { outline: none; border-color: #4361ee; box-shadow: 0 0 0 3px rgba(67,97,238,0.15); }
+        .query-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem; }
+        #btn-run { padding: 0.55rem 1.5rem; background: #4361ee; color: #fff; border: none; border-radius: 6px; font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+        #btn-run:hover { background: #3a56d4; }
+        #btn-run:disabled { background: #a0a0a0; cursor: not-allowed; }
+        #query-status { font-size: 0.8rem; color: #666; }
+
+        .results-box { background: #fff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 1.25rem; }
+        .results-box h3 { font-size: 0.95rem; margin-bottom: 0.75rem; }
+        #results-message { padding: 0.75rem; border-radius: 6px; font-size: 0.85rem; margin-bottom: 0.75rem; display: none; }
+        #results-message.success { background: #d4edda; color: #155724; display: block; }
+        #results-message.error { background: #f8d7da; color: #842029; display: block; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.825rem; }
+        th { background: #f8f9fa; text-align: left; padding: 0.55rem 0.75rem; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap; }
+        td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #eee; white-space: nowrap; max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
+        tr:hover td { background: #f8f9fa; }
+        #no-results { color: #888; font-size: 0.85rem; display: none; }
+    </style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-section">
+    <div class="login-card">
+        <h1>Admin Portal</h1>
+        <p>Sign in with your administrator account</p>
+        <div id="login-error"></div>
+        <form id="login-form">
+            <label for="username">Username</label>
+            <input type="text" id="username" autocomplete="username" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" autocomplete="current-password" required>
+            <button type="submit">Sign in</button>
+        </form>
+    </div>
+</div>
+
+<!-- SQL Console -->
+<div id="console-section">
+    <div class="console-header">
+        <h1>SQL Console</h1>
+        <div class="user-info">
+            <span id="display-user"></span>
+            <button id="btn-logout">Logout</button>
+        </div>
+    </div>
+
+    <div class="query-box">
+        <textarea id="sql-input" placeholder="SELECT * FROM users LIMIT 10;" spellcheck="false"></textarea>
+        <div class="query-actions">
+            <button id="btn-run">Run Query</button>
+            <span id="query-status"></span>
+        </div>
+    </div>
+
+    <div class="results-box">
+        <h3>Results</h3>
+        <div id="results-message"></div>
+        <div class="table-wrap">
+            <table id="results-table" style="display:none;">
+                <thead id="results-head"></thead>
+                <tbody id="results-body"></tbody>
+            </table>
+        </div>
+        <div id="no-results">Run a query to see results.</div>
+    </div>
+</div>
+
+<script>
+    const loginSection = document.getElementById('login-section');
+    const consoleSection = document.getElementById('console-section');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+    const sqlInput = document.getElementById('sql-input');
+    const btnRun = document.getElementById('btn-run');
+    const queryStatus = document.getElementById('query-status');
+    const resultsMessage = document.getElementById('results-message');
+    const resultsTable = document.getElementById('results-table');
+    const resultsHead = document.getElementById('results-head');
+    const resultsBody = document.getElementById('results-body');
+    const noResults = document.getElementById('no-results');
+    const displayUser = document.getElementById('display-user');
+
+    let token = sessionStorage.getItem('admin_token');
+    let username = sessionStorage.getItem('admin_user');
+
+    if (token && username) showConsole();
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginError.style.display = 'none';
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: user, password: pass })
+            });
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.message || 'Login failed');
+            }
+            const data = await res.json();
+            if (data.role !== 'ADMIN') {
+                throw new Error('Access denied. Admin privileges required.');
+            }
+            token = data.token;
+            username = user;
+            sessionStorage.setItem('admin_token', token);
+            sessionStorage.setItem('admin_user', username);
+            showConsole();
+        } catch (err) {
+            loginError.textContent = err.message;
+            loginError.style.display = 'block';
+        }
+    });
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+        sessionStorage.removeItem('admin_token');
+        sessionStorage.removeItem('admin_user');
+        token = null;
+        username = null;
+        loginSection.style.display = 'flex';
+        consoleSection.style.display = 'none';
+    });
+
+    btnRun.addEventListener('click', runQuery);
+    sqlInput.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runQuery();
+    });
+
+    async function runQuery() {
+        const sql = sqlInput.value.trim();
+        if (!sql) return;
+
+        btnRun.disabled = true;
+        queryStatus.textContent = 'Running...';
+        clearResults();
+
+        try {
+            const start = performance.now();
+            const res = await fetch('/api/admin/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({ sql })
+            });
+
+            if (res.status === 401 || res.status === 403) {
+                sessionStorage.removeItem('admin_token');
+                sessionStorage.removeItem('admin_user');
+                loginSection.style.display = 'flex';
+                consoleSection.style.display = 'none';
+                loginError.textContent = 'Session expired. Please log in again.';
+                loginError.style.display = 'block';
+                return;
+            }
+
+            const data = await res.json();
+            const elapsed = ((performance.now() - start) / 1000).toFixed(2);
+
+            if (data.type === 'ERROR') {
+                resultsMessage.className = 'error';
+                resultsMessage.textContent = data.message;
+                resultsMessage.style.display = 'block';
+                queryStatus.textContent = 'Error (' + elapsed + 's)';
+            } else if (data.type === 'SELECT') {
+                renderTable(data.columns, data.rows);
+                queryStatus.textContent = data.rowCount + ' row(s) in ' + elapsed + 's';
+            } else {
+                resultsMessage.className = 'success';
+                resultsMessage.textContent = data.message;
+                resultsMessage.style.display = 'block';
+                queryStatus.textContent = 'Done (' + elapsed + 's)';
+            }
+        } catch (err) {
+            resultsMessage.className = 'error';
+            resultsMessage.textContent = 'Network error: ' + err.message;
+            resultsMessage.style.display = 'block';
+            queryStatus.textContent = 'Failed';
+        } finally {
+            btnRun.disabled = false;
+        }
+    }
+
+    function showConsole() {
+        loginSection.style.display = 'none';
+        consoleSection.style.display = 'block';
+        displayUser.textContent = username;
+        noResults.style.display = 'block';
+    }
+
+    function clearResults() {
+        resultsMessage.style.display = 'none';
+        resultsMessage.className = '';
+        resultsTable.style.display = 'none';
+        resultsHead.innerHTML = '';
+        resultsBody.innerHTML = '';
+        noResults.style.display = 'none';
+    }
+
+    function esc(val) {
+        if (val === null || val === undefined) return '<span style="color:#aaa">NULL</span>';
+        const s = String(val);
+        const d = document.createElement('div');
+        d.appendChild(document.createTextNode(s));
+        return d.innerHTML;
+    }
+
+    function renderTable(columns, rows) {
+        resultsHead.innerHTML = '<tr>' + columns.map(c => '<th>' + esc(c) + '</th>').join('') + '</tr>';
+        resultsBody.innerHTML = rows.map(r =>
+            '<tr>' + columns.map(c => '<td>' + esc(r[c]) + '</td>').join('') + '</tr>'
+        ).join('');
+        resultsTable.style.display = 'table';
+    }
+</script>
+</body>
+</html>
